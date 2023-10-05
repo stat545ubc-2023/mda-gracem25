@@ -1,6 +1,6 @@
 ---
 title: "Mini Data-Analysis Deliverable 1"
-output: html_document
+output: github_document
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
@@ -84,10 +84,10 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: CHOICE_1\_HERE\
-2: CHOICE_2\_HERE\
-3: CHOICE_3\_HERE\
-4: CHOICE_4\_HERE
+1: vancouver_trees
+2: flow_sample
+3: apt_buildings
+4: cancer_sample
 
 <!----------------------------------------------------------------------------->
 
@@ -99,7 +99,31 @@ And that is exactly the first thing that you will do!
 
 ```{r}
 ### EXPLORE HERE ###
-steam_games
+
+vancouver_trees %>%
+  glimpse() %>%
+  class()
+
+# glimpse() tells us about several attributes in the trees database - there are 146,611 rows, 20 columns, and all of the column names. Class() gives us the another attribute, what the class of this database is. For vancouver_trees, we have tbl_df (a type of tibble), tbl (also a tibble) and data.frame, a dataframe.
+
+flow_sample %>%
+  glimpse() %>%
+  class()
+
+# for flow_sample, there are 218 rows, 7 columns, and the class also consists of a tbl_df (a type of tibble), tbl (also a tibble) and data.frame, a dataframe.
+
+apt_buildings %>%
+  glimpse() %>%
+  class()
+
+# for apt_buildings, there are 3,455 rows, 37 columns, and the class also consists of a tbl_df (a type of tibble), tbl (also a tibble) and data.frame, a dataframe.
+
+cancer_sample %>%
+  glimpse() %>%
+  class()
+
+# for cancer_sample, there are 569 rows, 32 columns, and the class also consists of a spec_tbl_df (a type of tibble), tbl_df (another type of tibble), tbl (also a tibble) and data.frame, a dataframe.
+
 ```
 
 <!----------------------------------------------------------------------------->
@@ -108,11 +132,17 @@ steam_games
 
 <!-------------------------- Start your work below ---------------------------->
 
+I have narrowed my selection of dataset down to the **vancouver_trees** dataset for this mini data analysis. I studied in the Faculty of Forestry for my undergraduate degree, so trees hold a special place in my heart. Because of this, I know that I will be able to understand at least some of the columns and values within this dataset, which will make my analysis go much smoother and hopefully means that I can explore some exciting questions with regard to the trees that are in my own city! It is also a rather large dataset, so by working with it I can gain experience in handling larger datasets, which I have no experience with.
+
 <!----------------------------------------------------------------------------->
 
 1.4 **(2 points)** Time for a  final decision! Going back to the beginning, it's important to have an *end goal* in mind. For example, if I had chosen the `titanic` dataset for my project, I might've wanted to explore the relationship between survival and other variables. Try to think of 1 research question that you would want to answer with your dataset. Note it down below.
 
 <!-------------------------- Start your work below ---------------------------->
+
+Research question to be explored using vancouver_trees dataset: 
+
+**How do tree communities differ in different Vancouver neighboorhoods?**
 
 <!----------------------------------------------------------------------------->
 
@@ -143,6 +173,79 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 
 <!-------------------------- Start your work below ---------------------------->
 
+## INTRODUCTION
+
+This is an exploration of the dataset **vancouver_trees** from the datateachr package. The question we are hoping to gain some insight into is as follows:
+
+**How do tree communities differ in different Vancouver neighboorhoods?**
+
+I will be exploring this question through the **dplyr** and **ggplot2** packages in R. Dplyr will be used to manipulate the vancouver_trees dataset and ggplot2 will be used to visualize the manipulated data.
+
+```{r}
+# Load the appropriate libraries for this exercise
+
+library(dplyr)
+library (ggplot2)
+library(datateachr)
+library(tidyverse)
+
+```
+
+
+```{r}
+## EXERCISE 1: 
+
+#Creating a tibble with tree ID, neighborhood, species, common name, genus, diameter, and height range. This simplifies the dataset to only the columns with valuable information that is pertinent to my question. We don't care about street names, for example, when studying tree communities in relation to their neighborhood.
+
+# To do this, I made a new tibble with only the columns I wanted from the vancouver_trees dataset with select() and used glimpse() to double check the output was correct.
+
+tree_cmnity_data <- vancouver_trees %>% select(tree_id, genus_name, species_name, common_name, neighbourhood_name, height_range_id, diameter)
+glimpse(tree_cmnity_data)
+
+# Now let's explore this tibble!
+
+```
+
+```{r}
+## EXERCISE 2: 
+
+# Plotting a bar graph of number of trees in each neighborhood. This will help us to determine how powerful our analysis of tree communities can be. We need to know if there are some neighborhoods with very few trees in the database as that may affect our statistical analyses. Also, it's just interesting to see and could give us an indication of greenspace disparities between wealthier and poorer neighborhoods. 
+
+# For this, I used ggplot and the geom_bar() function and printed the results.
+
+tree_num_nbhd <- ggplot(tree_cmnity_data, aes(neighbourhood_name)) + geom_bar()
+print(tree_num_nbhd)
+  
+```
+
+```{r}
+## Exercise 3: 
+
+# Determining the number of large trees (over 100ft tall) in the city. This will help us to understand a bit more about some of the largest trees in the city - how many there are and it will make it easier to determine where they are located. Big trees are important storers of carbon and important habitat for wildlife, and so are a key indicator of tree community health and urban ecosystem health in general. 
+
+# To do this, we will use filter() on height_range_id.
+
+tree_cmnity_data %>% filter(height_range_id == 10)
+
+# Interesting! there are only 12 trees over 100ft tall in this dataset!
+
+```
+
+```{r}
+## EXERCISE 4:
+
+# We will make a boxplot of tree diameters across neighborhoods to explore the range and mean tree diameter in the city. This will be insightful, as understanding if there is lots of diversity in tree diameters are indicative of a more complex urban forest that can support a variety of organisms!
+
+# To do this, we will use ggplot and the geom_boxplot() functions.
+
+tree_diameter <- ggplot(tree_cmnity_data, aes(neighbourhood_name, diameter)) +
+    geom_boxplot(width = 0.4)
+
+print(tree_diameter)
+
+```
+
+
 <!----------------------------------------------------------------------------->
 
 # Task 3: Choose research questions 
@@ -150,6 +253,14 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 **(4 points)** So far, you have chosen a dataset and gotten familiar with it through exploring the data. You have also brainstormed one research question that interested you (Task 1.4).  Now it's time to pick 4 research questions that you would like to explore in Milestone 2! Write the 4 questions and any additional comments below. 
 
 <!--- *****START HERE***** --->
+
+Research Question 1: How does tree species richness differ between neighborhoods in Vancouver?
+
+Research Question 2: What is the most common tree found in Vancouver? How dominant is it compared to other species?
+
+Research Question 3: What is the relationship between tree diameter and it's height class?
+
+Research Question 4: Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.)
 
 <!----------------------------->
 
