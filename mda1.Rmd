@@ -84,10 +84,10 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: vancouver_trees
-2: flow_sample
-3: apt_buildings
-4: cancer_sample
+1: vancouver_trees  
+2: flow_sample  
+3: apt_buildings  
+4: cancer_sample  
 
 <!----------------------------------------------------------------------------->
 
@@ -193,13 +193,15 @@ library(tidyverse)
 
 
 ```{r}
-## EXERCISE 1: 
+# EXERCISE 1: 
 
 #Creating a tibble with tree ID, neighborhood, species, common name, genus, diameter, and height range. This simplifies the dataset to only the columns with valuable information that is pertinent to my question. We don't care about street names, for example, when studying tree communities in relation to their neighborhood.
 
 # To do this, I made a new tibble with only the columns I wanted from the vancouver_trees dataset with select() and used glimpse() to double check the output was correct.
 
+as_tibble(vancouver_trees)
 tree_cmnity_data <- vancouver_trees %>% select(tree_id, genus_name, species_name, common_name, neighbourhood_name, height_range_id, diameter)
+as_tibble(tree_cmnity_data)
 glimpse(tree_cmnity_data)
 
 # Now let's explore this tibble!
@@ -207,7 +209,7 @@ glimpse(tree_cmnity_data)
 ```
 
 ```{r}
-## EXERCISE 2: 
+# EXERCISE 2: 
 
 # Plotting a bar graph of number of trees in each neighborhood. This will help us to determine how powerful our analysis of tree communities can be. We need to know if there are some neighborhoods with very few trees in the database as that may affect our statistical analyses. Also, it's just interesting to see and could give us an indication of greenspace disparities between wealthier and poorer neighborhoods. 
 
@@ -219,7 +221,7 @@ print(tree_num_nbhd)
 ```
 
 ```{r}
-## Exercise 3: 
+# EXERCISE 3: 
 
 # Determining the number of large trees (over 100ft tall) in the city. This will help us to understand a bit more about some of the largest trees in the city - how many there are and it will make it easier to determine where they are located. Big trees are important storers of carbon and important habitat for wildlife, and so are a key indicator of tree community health and urban ecosystem health in general. 
 
@@ -232,7 +234,7 @@ tree_cmnity_data %>% filter(height_range_id == 10)
 ```
 
 ```{r}
-## EXERCISE 4:
+# EXERCISE 4:
 
 # We will make a boxplot of tree diameters across neighborhoods to explore the range and mean tree diameter in the city. This will be insightful, as understanding if there is lots of diversity in tree diameters are indicative of a more complex urban forest that can support a variety of organisms!
 
