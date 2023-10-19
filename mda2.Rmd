@@ -56,10 +56,15 @@ From milestone 1, you should have an idea of the basic structure of your dataset
 First, write out the 4 research questions you defined in milestone 1 were. This will guide your work through milestone 2:
 
 <!-------------------------- Start your work below ---------------------------->
-1. *FILL_THIS_IN*
-2. *FILL_THIS_IN*
-3. *FILL_THIS_IN*
-4. *FILL_THIS_IN*
+
+1. How does tree species richness differ between neighborhoods in Vancouver?
+
+2. What is the most common tree found in Vancouver? How dominant is it compared to other species?
+
+3. What is the relationship between tree diameter and it's height class?
+
+4. Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.)
+
 <!----------------------------------------------------------------------------->
 
 Here, we will investigate your data using various data manipulation and graphing functions.
@@ -92,6 +97,28 @@ Using variables and/or tables you made in one of the "Summarizing" tasks:
 Make sure it's clear what research question you are doing each operation for!
 
 <!------------------------- Start your work below ----------------------------->
+
+```{r}
+# recalling the dataset vancouver_trees, as I need to refresh what the columns and rows look like
+
+glimpse(vancouver_trees)
+
+```
+
+**Research Question 1:** How does tree species richness differ between neighborhoods in Vancouver?
+
+From Summarizing activities, will complete Task 4. I will compare the counts and proportions of the number of species in each neighborhood using the categorical variables common_name and neighborhood_name. This will be beneficial towards answering my research question, as species richness is a count of the number of species, in this case tree species, found in an area, in this case subsetted by neighborhood.
+
+```{r}
+
+vancouver_trees %>%
+  group_by(neighbourhood_name, common_name) %>%
+  tally()
+
+```
+
+
+
 
 <!----------------------------------------------------------------------------->
 
