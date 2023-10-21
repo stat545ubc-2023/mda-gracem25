@@ -184,7 +184,7 @@ most_and_least_abndt_trees
 
 **Research Question 3:** What is the relationship between tree diameter and it's age?
 
-From summarizing activities, I will complete Task 3: Create a categorical variable with 3 or more groups from an existing numerical variable. *An example: age in years into "child, teen, adult, senior".* I will create a categorical variable titled "trunk_thickness" from "diameter", with categories very thin, thin, moderately thin, moderately thick, thick, very thick.
+From summarizing activities, I will complete Task 3: Create a categorical variable with 3 or more groups from an existing numerical variable. *An example: age in years into "child, teen, adult, senior".* I will create a categorical variable titled "trunk_thickness" from "diameter", with categories very thin, thin, moderately thin, moderately thick, thick, very thick. This will help as we can gain a better understanding of the actual thickness of these tree trunks, rather than just looking at numbers that don't give a good visual. We can later plot this against age to gain a clear picture of the relationship. 
 
 ```{r}
 # Creating categorical variable trunk_thickness from diameter with 6 categories
@@ -210,9 +210,73 @@ vancouver_trees
 vancouver_trees_trunk_thickness <- vancouver_trees %>% 
   mutate(trunk_thickness=cut(diameter, breaks=c(-Inf, 1, 3, 9, 12, 15, Inf), labels=c("Very thin","Thin","Moderately thin", "Moderately thick", "Thick", "Very thick")))
 
-vancouver_trees_trunk_thickness                
+vancouver_trees_trunk_thickness
+
+# Now we have trunk_thickness added to the dataset.
 
 ```
+
+For graphing activities, I will complete Task 9: Create 3 histograms, with each histogram having different sized bins. Pick the "best" one and explain why it is the best. The diameter data had an interesting spread, so before further probing the data to compare age vs. diameter it would be good to determine if there are dramatic outliers, and to determine how well I separated the trunk thickness categories above, which will be important when we get to graphing the relationship between tree diameter and age.
+
+```{r}
+# Histogram #1: Bin size of 30
+
+tree_diameter_histogram_bin30 <- vancouver_trees %>%
+  ggplot(aes(diameter, color = "lightgreen", fill = "brown")) +
+  geom_histogram(binwidth = 30)
+
+tree_diameter_histogram_bin30 
+
+# This is not great, and it shows us that most of the diameter values are below 100 inches. We can try another bin size, perhaps a smaller bin size, say 10.
+
+tree_diameter_histogram_bin10 <- vancouver_trees %>%
+  ggplot(aes(diameter, color = "lightgreen", fill = "brown")) +
+  geom_histogram(binwidth = 10)
+
+tree_diameter_histogram_bin10 
+
+# here we can see even more prominently that the data is mostly concentrated below a diameter of 25 inches. Let's quickly try to remove these outliers in the data and see if that makes a difference. We will determine major outliers using filter()
+
+outliers <- vancouver_trees %>% filter(diameter > 100)
+
+outliers
+
+# there are only 10 trees that have a diameter greater than 100 inches - and these are likely incorrect measurements in some way (wrong unit, etc.). This is made clear by the date planted - some of the largest trees were planted only 20 years ago! This level of growth is completely impossible. I will filter these out of the data set with filter().
+
+vancouver_trees_minus_outliers <- vancouver_trees %>% filter(diameter < 100)
+
+vancouver_trees_minus_outliers
+
+# Now, let's try that histogram with bin width 10 again!
+
+tree_diameter_no_outliers_histogram_bin10 <- vancouver_trees_minus_outliers %>%
+  ggplot(aes(diameter, color = "lightgreen", fill = "brown")) +
+  geom_histogram(binwidth = 10)
+
+tree_diameter_no_outliers_histogram_bin10
+
+# Better, but I think the bin width should still be lower. Let's try 5.
+
+tree_diameter_no_outliers_histogram_bin5 <- vancouver_trees_minus_outliers %>%
+  ggplot(aes(diameter, color = "lightgreen", fill = "brown")) +
+  geom_histogram(binwidth = 5)
+
+tree_diameter_no_outliers_histogram_bin5
+
+# Nice! This looks pretty good.
+
+```
+
+**Research Question 4:** Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.) 
+
+From summarizing activities, I will be completing Task 1: Compute the *range*, *mean*, and *two other summary statistics* of **one numerical variable** across the groups of **one categorical variable** from your data. I will compute the range, mean, maximum and minimum values for tree diameter (which I partially did as an aside for Research Question 3 above) - there aren't many numerical variables in 
+
+```{r}
+
+vancouver_trees
+
+```
+
 
 
 <!----------------------------------------------------------------------------->
