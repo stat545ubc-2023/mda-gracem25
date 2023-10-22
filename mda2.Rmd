@@ -57,7 +57,7 @@ First, write out the 4 research questions you defined in milestone 1 were. This 
 
 <!-------------------------- Start your work below ---------------------------->
 
-1. How does tree species richness differ between neighborhoods in Vancouver?
+1. **WAS ALTERED FROM MDA 1 TO BETTER WORK WITH THE TASKS IN 1.2 AND FOR FURTHER RESEARCH:** How do tree species attributes (distribution, diameter, height, etc.) differ in the city of Vancouver?
 
 2. What is the most common tree found in Vancouver? How dominant is it compared to other species?
 
@@ -99,15 +99,15 @@ Make sure it's clear what research question you are doing each operation for!
 <!------------------------- Start your work below ----------------------------->
 
 ```{r}
-# recalling the dataset vancouver_trees, as I need to refresh what the columns and rows look like
+# recalling the dataset vancouver_trees, as I need to refresh what the columns and rows look like, using glimpse() from dplyr
 
 glimpse(vancouver_trees)
 
 ```
 
-**Research Question 1:** How do tree species attributes (location, diameter, height, etc.) differ in the city of Vancouver?
+## **Research Question 1:** How do tree species attributes (distribution, diameter, height, etc.) differ in the city of Vancouver?
 
-From Summarizing activities, will complete Task 4. I will compare the counts and proportions of the number of species in each neighborhood using the categorical variables common_name and neighborhood_name. This will be beneficial towards answering my research question, as species richness is an important attribute of the tree species, as it is a count of the number of species, in this case tree species, found in an area, in this case subsetted by neighborhood.
+For **summarizing activities**, will complete **Task 4: Compute the proportion and counts in each category of one categorical variable across the groups of another categorical variable from your data. Do not use the function `table()`!**. I will compare the counts and proportions of the number of neighbourhoods a particular tree species occurs within using the categorical variables common_name and neighborhood_name. This will be beneficial towards answering my research question, as understanding how a particular tree species is distributed across the city, whether it be evenly or unevenly, is an important attribute of the tree species. It helps us to picture where exactly this tree occurs within the city and to think about why that might be.
 
 ```{r}
 
@@ -122,6 +122,7 @@ total_tree_sp_vancouver
 # there are 634 tree species in the City of Vancouver
 
 # now to determine the number of neighbourhoods each tree species occurs
+
 neighborhoods_per_tree_sp <- vancouver_trees %>%
   group_by(common_name) %>%
   count(neighbourhood_name)
@@ -146,7 +147,7 @@ sum(proportions$freq)
 
 ```
 
-For graphing activities, I will complete Task 7: Make a graph where it makes sense to customize the alpha transparency. For this, I will create a jitter plot that compares the spread of tree diameter values in three specific tree species - the Japanese snowbell, Norway maple, and Douglas fir trees - in Vancouver. You can gather much more information from jitter plots when they have a low alpha transparency - it allows you to see where values are clustering and where they are more spread out. This will be helpful to compare the 
+For **graphing activities** for research question 1, I will complete **Task 7: Make a graph where it makes sense to customize the alpha transparency.** For this, I will create a jitter plot that compares the spread of tree diameter values in three specific tree species - the Japanese snowbell, Norway maple, and Douglas fir trees - in Vancouver. You can gather much more information from jitter plots when they have a low alpha transparency - it allows you to see where values are clustering and where they are more spread out. This will be helpful for research question 1 because it visualizes and compares how an important tree attribute (diameter) differs between species within the City of Vancouver.
 
 ```{r}
 
@@ -167,15 +168,12 @@ tree_sp_vs_diameter
 
 ```
 
+## **Research Question 2:** What is the most common tree found in Vancouver? How dominant is it compared to other species?
 
-
-
-**Research Question 2:** What is the most common tree found in Vancouver? How dominant is it compared to other species?
-
-From summarizing activities, I will complete Task 2 and compute the number of observations per tree species using common_name, a categorical variable, in Metro Vancouver and sort them in descending order from most to least common, based on the number of observations per tree species.  This will essentially answer my research question.
+From **summarizing activities**, I will complete **Task 2: Compute the number of observations for at least one of your categorical variables** and compute the number of observations per tree species using common_name, a categorical variable, in Metro Vancouver and sort them in descending order from most to least common, based on the number of observations per tree species.  This will essentially answer my research question.
 
 ```{r}
-# getting a count of the number of observations per unique common_name and sorting in descending order
+# getting and ordering from high to low a count of the number of observations per unique common_name and sorting in descending order using dplyr function count() and arrange()
 
 tree_count_by_species <- vancouver_trees %>% 
   count(common_name)
@@ -187,17 +185,15 @@ tree_count_by_species_high_to_low <- tree_count_by_species %>%
 
 tree_count_by_species_high_to_low
 
-# from this, we can determine that the most common tree in the City of Vancouver is the Kwanzan Flowering Cherry tree!
+# from this, we can determine that the most common tree in the City of Vancouver is the Kwanzan Flowering Cherry tree! It outnumbers the Pissard plum tree, the second most common tree, by almost 2000 trees.
 ```
 
-From graphing activities, I will complete Task 6: Create a graph of your choosing, make one of the axes logarithmic, and format the axes labels so that they are "pretty" or easier to read. I will make a bar graph depicting what I discovered above, visualizing the counts of trees by species. There are counts ranging from 10,000+ trees to 1 tree, so a logarithmic scale will be beneficial to aid in a better visualization and to help understand the spread of our data.
+From **graphing activities**, I will complete **Task 6: Create a graph of your choosing, make one of the axes logarithmic, and format the axes labels so that they are "pretty" or easier to read.** I will make a bar graph depicting what I discovered above, visualizing the counts of trees by species. There are counts ranging from 10,000+ trees to 1 tree, so a logarithmic scale will be beneficial to aid in a better visualization and to help understand the spread of our data. This plot will be helpful for my research question as it will help in visually comparing how dominant the most common tree species is in the city of Vancouver.
 
 ```{r}
-# creating a bar plot with a logarithmic scale with ggplot2 to depict tree counts by species in the city of Metro Vancouver.
+# creating a bar plot with a logarithmic scale with ggplot2 and the geom_col() function to depict tree counts by species in the city of Metro Vancouver.
 
-library(ggplot2)
-
-# Let's also reduce the number of species we are comparing, since showing 634 bars on a graph is not going to look pretty. Let's get only the observations where there are greater than 5000 individuals per species or less than 2 individuals per species. I will use the select() function prior to the ggplot function to do this.
+# Let's also reduce the number of species we are comparing, since showing 634 bars on a graph is not going to look pretty. Let's get only the observations where there are greater than 5000 individuals per species or less than 2 individuals per species. I will use the filter() function prior to the ggplot function to do this.
 
 most_and_least_abndt_trees <- tree_count_by_species %>%
   filter(n > 5000 | n < 2) %>%
@@ -217,12 +213,12 @@ most_and_least_abndt_trees
 
 **Research Question 3:** What is the relationship between tree diameter and it's age?
 
-From summarizing activities, I will complete Task 3: Create a categorical variable with 3 or more groups from an existing numerical variable. *An example: age in years into "child, teen, adult, senior".* I will create a categorical variable titled "trunk_thickness" from "diameter", with categories very thin, thin, moderately thin, moderately thick, thick, very thick. This will help as we can gain a better understanding of the actual thickness of these tree trunks, rather than just looking at numbers that don't give a good visual. We can later plot this against age to gain a clear picture of the relationship. 
+From **summarizing activities**, I will complete **Task 3: Create a categorical variable with 3 or more groups from an existing numerical variable.** I will create a categorical variable titled "trunk_thickness" from "diameter", with categories very thin, thin, moderately thin, moderately thick, thick, very thick. This will help as we can gain a better understanding of the actual thickness of these tree trunks, rather than just looking at numbers that don't give a good visual. We can later plot this against age to gain a clear picture of the relationship. 
 
 ```{r}
 # Creating categorical variable trunk_thickness from diameter with 6 categories
 
-# Let's determine min, max and mean for the diameter values first using summarize()
+# Let's determine min, max and mean for the diameter values first using the dplyr function summarize()
 
 min_max_mean_diameter <- vancouver_trees %>% summarize(max = max(diameter), min = min(diameter), mean = mean(diameter))
 
@@ -239,6 +235,7 @@ vancouver_trees
 # Moderately thick < 12
 # Thick < 15
 # Very thick > 15
+# using dplyr function mutate()
 
 vancouver_trees_trunk_thickness <- vancouver_trees %>% 
   mutate(trunk_thickness=cut(diameter, breaks=c(-Inf, 1, 3, 9, 12, 15, Inf), labels=c("Very thin","Thin","Moderately thin", "Moderately thick", "Thick", "Very thick")))
@@ -249,7 +246,7 @@ vancouver_trees_trunk_thickness
 
 ```
 
-For graphing activities, I will complete Task 9: Create 3 histograms, with each histogram having different sized bins. Pick the "best" one and explain why it is the best. The diameter data had an interesting spread, so before further probing the data to compare age vs. diameter it would be good to determine if there are dramatic outliers, and to determine how well I separated the trunk thickness categories above, which will be important when we get to graphing the relationship between tree diameter and age.
+For **graphing activities**, I will complete **Task 9: Create 3 histograms, with each histogram having different sized bins. Pick the "best" one and explain why it is the best.** The diameter data had an interesting spread, so before further probing the data to compare age vs. diameter it would be good to determine if there are dramatic outliers, and to determine how well I separated the trunk thickness categories above, which will be important when we get to graphing the relationship between tree diameter and age.
 
 ```{r}
 # Histogram #1: Bin size of 30 using ggplot and geom_histogram() from ggplot2
@@ -268,7 +265,7 @@ tree_diameter_histogram_bin10 <- vancouver_trees_trunk_thickness %>%
 
 tree_diameter_histogram_bin10 
 
-# here we can see even more prominently that the data is mostly concentrated below a diameter of 25 inches. Let's quickly try to remove these outliers in the data and see if that makes a difference. We will determine major outliers using filter()
+# here we can see even more prominently that the data is mostly concentrated below a diameter of 25 inches. Let's quickly try to remove these outliers in the data and see if that makes a difference. We will determine major outliers using filter() from dplyr
 
 outliers <- vancouver_trees_trunk_thickness %>% filter(diameter > 100)
 
@@ -296,17 +293,17 @@ tree_diameter_no_outliers_histogram_bin5 <- vancouver_trees_minus_outliers %>%
 
 tree_diameter_no_outliers_histogram_bin5
 
-# Nice! This looks pretty good.
+# Nice! This looks pretty good. This last histogram with a bin width of 5 is the best, as it shows a clear distribution of the diameters into reasonably-sized bins and a reasonable number of bins - not too many, not too few.
 
 ```
 
 **Research Question 4:** Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.) 
 
-From summarizing activities, I will be completing Task 1: Compute the *range*, *mean*, and *two other summary statistics* of **one numerical variable** across the groups of **one categorical variable** from your data. I will compute the range, mean, standard deviation and minimum values for tree diameter (which I partially did as an aside for Research Question 3 above) - there aren't many numerical variables in this dataset, and the diameter measurements are a very valuable indicator
+From **summarizing activities**, I will be completing **Task 1: Compute the *range*, *mean*, and *two other summary statistics* of one numerical variable across the groups of one categorical variable from your data.** I will compute the range, mean, standard deviation and median values for tree diameter (which I partially did with mean as an aside for Research Question 3 above) - there aren't many numerical variables in this dataset, and the statistics from these diameter measurements will be a very valuable indicator of the complexity and thus health of Vancouver tree communities.
 
 ```{r}
 
-# calculating the mean, range, standard deviation and median for each neighborhood's tree diameter measurements using group_by() and summarize()
+# calculating the mean, range, standard deviation and median for each neighborhood's tree diameter measurements using group_by() and summarize() functions from dplyr
 
 diameter_summary_stats <- vancouver_trees %>%
   group_by(neighbourhood_name) %>%
@@ -316,19 +313,22 @@ diameter_summary_stats
 
 ```
 
-From graphing activities, I will be completing Task 8: Create a graph that has at least two geom layers. I will be graphing the tibble diameter summary stats, with a 
+From **graphing activities**, I will be completing **Task 8: Create a graph that has at least two geom layers.** I will use the tibble made above to plot the standard deviation of tree diameter by mean tree diameter for each neighbourhood in a graph with points to indicate where each neighbourhood falls along the plot. This will be an interesting relationship to visualize, to see how mean diameter correlates with the variation in our diameter datasets and how this compares across neigbourhoods. This aid in answering research question 4 as it will visualize certain aspects of tree community health (how big the trees are, and how much their diameters vary) and the relationship between them.  
 
 ```{r}
 
+# using ggplot2 and the geom_line(), geom_text() and geom_point() functions, we will plot the relationship between the standard deviation of tree diameter and the mean tree diameter for each Vancouver neighbourhood.
+
 diam_mean_vs_sd_nbhd <- diameter_summary_stats %>%
   ggplot(aes(mean, sd, label = neighbourhood_name)) +
-  geom_line() +
   geom_point(color = "red") +
   geom_text(check_overlap = TRUE, size = 2) +
   theme_minimal() +
   labs(x = "Mean Tree Diameter by Neighborhood", y = "Standard Deviation of Tree Diamter", title = "Diameter SD vs. mean by Vancouver neighborhood")
 
 diam_mean_vs_sd_nbhd
+
+# interesting! SD generally appears to increase as tree diameter increases. Note the spread of the extreme values and which neighbourhoods they correspond too - downtown has very small trees with little variability in size, which makes sense to me.
 
 ```
 
