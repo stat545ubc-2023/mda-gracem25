@@ -105,9 +105,9 @@ glimpse(vancouver_trees)
 
 ```
 
-**Research Question 1:** How does tree species richness differ between neighborhoods in Vancouver?
+**Research Question 1:** How do tree species attributes (location, diameter, height, etc.) differ in the city of Vancouver?
 
-From Summarizing activities, will complete Task 4. I will compare the counts and proportions of the number of species in each neighborhood using the categorical variables common_name and neighborhood_name. This will be beneficial towards answering my research question, as species richness is a count of the number of species, in this case tree species, found in an area, in this case subsetted by neighborhood.
+From Summarizing activities, will complete Task 4. I will compare the counts and proportions of the number of species in each neighborhood using the categorical variables common_name and neighborhood_name. This will be beneficial towards answering my research question, as species richness is an important attribute of the tree species, as it is a count of the number of species, in this case tree species, found in an area, in this case subsetted by neighborhood.
 
 ```{r}
 
@@ -121,18 +121,51 @@ total_tree_sp_vancouver
 
 # there are 634 tree species in the City of Vancouver
 
-# now to determine number of tree species (tree species richness) by neighbourhood
-tree_sp_per_neighborhood <- vancouver_trees %>%
-  group_by(neighbourhood_name) %>%
-  distinct(common_name) %>%
+# now to determine the number of neighbourhoods each tree species occurs
+neighborhoods_per_tree_sp <- vancouver_trees %>%
+  group_by(common_name) %>%
   count(neighbourhood_name)
 
-tree_sp_per_neighborhood
+neighborhoods_per_tree_sp
 
+# now to calculate the proportion of trees in each neighborhood for a specific tree species, the Accolade cherry, using filter() and mutate() from dplyr
+
+proportions <- neighborhoods_per_tree_sp %>%
+  filter(common_name == "ACCOLADE CHERRY") %>%
+  mutate(freq = n/sum(n))
+
+proportions
+
+#there, now we can see the relative proportions in the freq column of the tibble for each neighbourhood that this tree species is found in. For example, we can see that half of the Accolade cherry trees in the city are found in the Hastings-Sunrise neighbourhood!
+
+# Just to confirm that our freq column is accurate, let's make sure all of the proportions sum to 1.
+
+sum(proportions$freq)
+
+# great, it does sum to 1, hence these proportions are accurate.
 
 ```
 
-For graphing activities, I will complete
+For graphing activities, I will complete Task 7: Make a graph where it makes sense to customize the alpha transparency. For this, I will create a jitter plot that compares the spread of tree diameter values in three specific tree species - the Japanese snowbell, Norway maple, and Douglas fir trees - in Vancouver. You can gather much more information from jitter plots when they have a low alpha transparency - it allows you to see where values are clustering and where they are more spread out. This will be helpful to compare the 
+
+```{r}
+
+# using filter() from dplyr and ggplot with geom_jitter() function from ggplot2, we will create this plot. 
+
+three_tree_sp_in_vancouver <- vancouver_trees %>%
+  filter(common_name == c("JAPANESE SNOWBELL", "NORWAY MAPLE", "DOUGLAS FIR"))
+
+three_tree_sp_in_vancouver
+
+tree_sp_vs_diameter <- three_tree_sp_in_vancouver %>%
+  ggplot(aes(common_name, diameter)) +
+  geom_jitter(height = 20, color = "purple", alpha = 0.2)
+
+tree_sp_vs_diameter
+
+# from this plot, we can see that Douglas firs and Norway maples have similar height distributions, but that Norway maples are far more numerous in the city than Douglas firs (interesting, considering which one is the native species!). We can also tell that Japanese snowbell is more numerous than Douglas fir but less numerous than Norway maple, and has a generally smaller diameter than both of these trees with less spread in diameter values.
+
+```
 
 
 
@@ -212,16 +245,16 @@ vancouver_trees_trunk_thickness <- vancouver_trees %>%
 
 vancouver_trees_trunk_thickness
 
-# Now we have trunk_thickness added to the dataset.
+# Now we have the trunk_thickness column added to the dataset.
 
 ```
 
 For graphing activities, I will complete Task 9: Create 3 histograms, with each histogram having different sized bins. Pick the "best" one and explain why it is the best. The diameter data had an interesting spread, so before further probing the data to compare age vs. diameter it would be good to determine if there are dramatic outliers, and to determine how well I separated the trunk thickness categories above, which will be important when we get to graphing the relationship between tree diameter and age.
 
 ```{r}
-# Histogram #1: Bin size of 30
+# Histogram #1: Bin size of 30 using ggplot and geom_histogram() from ggplot2
 
-tree_diameter_histogram_bin30 <- vancouver_trees %>%
+tree_diameter_histogram_bin30 <- vancouver_trees_trunk_thickness %>%
   ggplot(aes(diameter, color = "lightgreen", fill = "brown")) +
   geom_histogram(binwidth = 30)
 
@@ -229,7 +262,7 @@ tree_diameter_histogram_bin30
 
 # This is not great, and it shows us that most of the diameter values are below 100 inches. We can try another bin size, perhaps a smaller bin size, say 10.
 
-tree_diameter_histogram_bin10 <- vancouver_trees %>%
+tree_diameter_histogram_bin10 <- vancouver_trees_trunk_thickness %>%
   ggplot(aes(diameter, color = "lightgreen", fill = "brown")) +
   geom_histogram(binwidth = 10)
 
@@ -237,13 +270,13 @@ tree_diameter_histogram_bin10
 
 # here we can see even more prominently that the data is mostly concentrated below a diameter of 25 inches. Let's quickly try to remove these outliers in the data and see if that makes a difference. We will determine major outliers using filter()
 
-outliers <- vancouver_trees %>% filter(diameter > 100)
+outliers <- vancouver_trees_trunk_thickness %>% filter(diameter > 100)
 
 outliers
 
 # there are only 10 trees that have a diameter greater than 100 inches - and these are likely incorrect measurements in some way (wrong unit, etc.). This is made clear by the date planted - some of the largest trees were planted only 20 years ago! This level of growth is completely impossible. I will filter these out of the data set with filter().
 
-vancouver_trees_minus_outliers <- vancouver_trees %>% filter(diameter < 100)
+vancouver_trees_minus_outliers <- vancouver_trees_trunk_thickness %>% filter(diameter < 100)
 
 vancouver_trees_minus_outliers
 
