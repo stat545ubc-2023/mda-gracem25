@@ -269,11 +269,33 @@ tree_diameter_no_outliers_histogram_bin5
 
 **Research Question 4:** Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.) 
 
-From summarizing activities, I will be completing Task 1: Compute the *range*, *mean*, and *two other summary statistics* of **one numerical variable** across the groups of **one categorical variable** from your data. I will compute the range, mean, maximum and minimum values for tree diameter (which I partially did as an aside for Research Question 3 above) - there aren't many numerical variables in 
+From summarizing activities, I will be completing Task 1: Compute the *range*, *mean*, and *two other summary statistics* of **one numerical variable** across the groups of **one categorical variable** from your data. I will compute the range, mean, standard deviation and minimum values for tree diameter (which I partially did as an aside for Research Question 3 above) - there aren't many numerical variables in this dataset, and the diameter measurements are a very valuable indicator
 
 ```{r}
 
-vancouver_trees
+# calculating the mean, range, standard deviation and median for each neighborhood's tree diameter measurements using group_by() and summarize()
+
+diameter_summary_stats <- vancouver_trees %>%
+  group_by(neighbourhood_name) %>%
+  summarize(mean = mean(diameter), range = range(diameter), median = median(diameter), sd = sd(diameter))
+
+diameter_summary_stats
+
+```
+
+From graphing activities, I will be completing Task 8: Create a graph that has at least two geom layers. I will be graphing the tibble diameter summary stats, with a 
+
+```{r}
+
+diam_mean_vs_sd_nbhd <- diameter_summary_stats %>%
+  ggplot(aes(mean, sd, label = neighbourhood_name)) +
+  geom_line() +
+  geom_point(color = "red") +
+  geom_text(check_overlap = TRUE, size = 2) +
+  theme_minimal() +
+  labs(x = "Mean Tree Diameter by Neighborhood", y = "Standard Deviation of Tree Diamter", title = "Diameter SD vs. mean by Vancouver neighborhood")
+
+diam_mean_vs_sd_nbhd
 
 ```
 
