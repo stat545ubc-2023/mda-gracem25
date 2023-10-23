@@ -481,6 +481,13 @@ Explain your decision for choosing the above two research questions.
 
 ### For research question 1:
 
+There is still much to be explored with this question as I still need to create an age variable through subtracting today's date from the date_planted value and to graph the relationship of age vs. diameter.
+
+Also, I know we need to do some modelling in Task 3, and I think this will be a great question to explore for that.
+
+### For research question 2:
+
+This is a complex question that I only started to dive into answering. I think it will yield very interesting and valuable results that can be used by city planners to understanding which neighbourhoods have the healthiest tree community - tree community health corresponds with overall ecosystem health, so will also indicate how well the neighborhood supports pollinators, birds, etc. The answer we get can hopefully allow us to think about why it may be that specific neighbourhood and how we can or cannot try to attain similar tree community health in other neighborhoods.
 
 <!----------------------------------------------------------------------------->
 
@@ -489,6 +496,62 @@ Now, try to choose a version of your data that you think will be appropriate to 
 (If it makes more sense, then you can make/pick two versions of your data, one for each research question.) 
 
 <!--------------------------- Start your work below --------------------------->
+
+### For research question 1: creating a relevant version of the dataset vancouver_trees to answer this question
+
+```{r}
+
+# Lets begin by narrowing our dataset into only the variables we need to work with for this data using dplyr function select(). All we will need is tree_id, common_name, diameter and date_planted to explore this age-diameter relationship (with some modifications later down the line).
+
+
+vancouver_trees_age_diameter_relationship <- vancouver_trees %>%
+  select(tree_id, common_name, diameter, date_planted)
+
+vancouver_trees_age_diameter_relationship
+
+#To analyze age vs. diameter, I will need to filter out any individual tree observations that do not have a date_planted or diameter associated with them. I will use the dplyr function filter() to do so.
+
+vancouver_trees_w_dates <- vancouver_trees_age_diameter_relationship %>%
+  filter(!is.na(date_planted))
+
+vancouver_trees_w_dates
+
+# Next, I only care about the year of the date_planted column, so let's rename it and adjust the date format to only include year. We will do this using the dplyr function mutate() and lubridate function as.duration() to create the new variable, age, and then use select() to drop the date_planted column from the dataset.
+
+vancouver_trees_age <- vancouver_trees_w_dates %>%
+  mutate(age = as.duration(today() - date_planted)) %>%
+  select(tree_id, common_name, diameter, age)
+
+vancouver_trees_age
+
+# this dataset is much more workable now!
+
+```
+
+### For research question 2: creating a relevant version of the dataset vancouver_trees to answer this question
+
+```{r}
+# I will use tidyr function unite() to combine genus and species into one variable, their latin name, (as I did previously to untidy my data), as this will be what I will use to determine species richness instead of common_name, as these are more scientifically accepted names for the trees and I will not have a need for separate variables genus and species for this analysis.
+
+vancouver_trees_latin_name <- vancouver_trees %>%
+   unite(latin_name, c(genus_name, species_name), sep = " ")
+
+vancouver_trees_latin_name
+
+# I will then use the dplyr function select() to drop irrelevant columns from the vancouver_trees dataset for this analysis. I only will need the tree_id, latin_name, neighbourhood_name, height_range_id, diameter and date_planted variables.
+
+vancouver_trees
+
+vancouver_trees_q2 <- vancouver_trees_latin_name %>%
+  select(tree_id, latin_name, neighbourhood_name, height_range_id, diameter, date_planted)
+
+vancouver_trees_q2
+
+```
+
+In summary, I used 5 functions in this task: select(), filter(), mutate(), as.duration(), and unite().
+
+<!----------------------------------------------------------------------------->
 
 # Task 3: Modelling
 
