@@ -211,7 +211,7 @@ most_and_least_abndt_trees
 
 ```
 
-**Research Question 3:** What is the relationship between tree diameter and it's age?
+## **Research Question 3:** What is the relationship between tree diameter and it's age?
 
 From **summarizing activities**, I will complete **Task 3: Create a categorical variable with 3 or more groups from an existing numerical variable.** I will create a categorical variable titled "trunk_thickness" from "diameter", with categories very thin, thin, moderately thin, moderately thick, thick, very thick. This will help as we can gain a better understanding of the actual thickness of these tree trunks, rather than just looking at numbers that don't give a good visual. We can later plot this against age to gain a clear picture of the relationship. 
 
@@ -297,7 +297,7 @@ tree_diameter_no_outliers_histogram_bin5
 
 ```
 
-**Research Question 4:** Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.) 
+## **Research Question 4:** Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.) 
 
 From **summarizing activities**, I will be completing **Task 1: Compute the *range*, *mean*, and *two other summary statistics* of one numerical variable across the groups of one categorical variable from your data.** I will compute the range, mean, standard deviation and median values for tree diameter (which I partially did with mean as an aside for Research Question 3 above) - there aren't many numerical variables in this dataset, and the statistics from these diameter measurements will be a very valuable indicator of the complexity and thus health of Vancouver tree communities.
 
@@ -391,6 +391,35 @@ Based on the definition above, can you identify if your data is tidy or untidy? 
 
 <!--------------------------- Start your work below --------------------------->
 
+```{r}
+
+vancouver_trees
+
+```
+
+### vancouver_trees is a tidy dataset.
+
+Based on the definition above, this dataset certainly aligns with tidy data. The tree_id column is the column that contains the individual, **unique** identifier for each individual tree in the City of Vancouver within this database. Thus, each row is a unique individual tree observation. Each column, of which there are 20 in this dataset, is indeed a variable. For example, the 8 variables I will discuss are std_street, common_name, neighborhood_name, height_range_id, diameter, date_planted, longitude, and latitude. Each of these columns where they intersect with a row produces a cell with a value. Hence, this is tidy data.
+
+**std_street** = the street that each individual tree occurs on. There are multiple instances of the same street, because there are multiple individual trees on said street.
+
+**common_name** = the common name of each individual tree. There are multiple instances of the same common name, because there are multiple individual trees with the same common name.
+
+**neighbourhood_name** = the neighborhood that each individual tree occurs in. There are multiple instances of the same neighborhood, because there are multiple individual trees in said neighborhood.
+
+**height_range_id** = the height class that an individual tree observation has
+
+**diameter** = the measured diameter (DBH) value of an individual tree observation
+
+**date_planted** = the specific date of planting for an individual tree observation - there is something untidy about this variable and the other variable when you look at the ways in which they specify an empty cell - date_planted uses <NA>, lat and long use __NA__ (it almost looks like it's just an empty cell that R has filled in with NA)
+
+**latitude** = the specific latitude value for an individual tree observation
+
+**longitude** = the specific longitude value for an individual tree observation
+
+All of the columns are variables, and all of their contents are values. Hence, tidy data.
+
+
 <!----------------------------------------------------------------------------->
 
 ### 2.2 (4 points)
@@ -403,6 +432,36 @@ Be sure to explain your reasoning for this task. Show us the "before" and "after
 
 <!--------------------------- Start your work below --------------------------->
 
+### Untidying the vancouver_trees dataset by combining latitude and longitude into one column and genus and species into another column
+
+```{r}
+# before untidying
+
+vancouver_trees
+
+
+# we will combine columns and their values using the tidyr function unite()
+
+vancouver_trees_latin_name <- vancouver_trees %>%
+  unite(latin_name, c(genus_name, species_name), sep = " ")
+
+vancouver_trees_latin_name
+
+vancouver_trees_latin_name_latlong <- vancouver_trees_latin_name %>%
+  unite(latlong, c(latitude, longitude), sep = ", ")
+
+vancouver_trees_latin_name_latlong
+
+# after untidying
+
+vancouver_trees_latin_name_latlong
+
+# great, now we have an arguably untidy data format compared to the original tidy vancouver_trees dataset by making the dataset narrower using the unite() function from tidyr
+
+```
+
+This data is now untidy because we have grouped two variables into one column in two cases. This has narrowed the dataset from 20 columns to 18, and  means that we are no longer able to compare individual trees by just their genus or just their species or just their latitude or just their longitude. Essentially, the unite() function in tidyr created two values within one cell now for these two new columns, not one value, which goes against the three defining criteria for tidy data.
+
 <!----------------------------------------------------------------------------->
 
 ### 2.3 (4 points)
@@ -411,14 +470,17 @@ Now, you should be more familiar with your data, and also have made progress in 
 
 <!-------------------------- Start your work below ---------------------------->
 
-1.  *FILL_THIS_IN*
-2.  *FILL_THIS_IN*
+1.  What is the relationship between tree diameter and it's age? (originally research question 3)
+2.  Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.) (originally research question 4)
 
 <!----------------------------------------------------------------------------->
 
 Explain your decision for choosing the above two research questions.
 
 <!--------------------------- Start your work below --------------------------->
+
+### For research question 1:
+
 
 <!----------------------------------------------------------------------------->
 
