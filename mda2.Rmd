@@ -121,7 +121,7 @@ total_tree_sp_vancouver
 
 # there are 634 tree species in the City of Vancouver
 
-# now to determine the number of neighbourhoods each tree species occurs
+# now to determine the number of neighbourhoods in which each tree species occurs
 
 neighborhoods_per_tree_sp <- vancouver_trees %>%
   group_by(common_name) %>%
@@ -342,6 +342,36 @@ Based on the operations that you've completed, how much closer are you to answer
 
 <!------------------------- Write your answer here ---------------------------->
 
+### Research Question 1: How do tree species attributes (distribution, diameter, height, etc.) differ in the city of Vancouver?
+
+This question I made some progress towards - I have created a tibble with all of the tree species and which neighborhoods they occur in, which I can use for plotting to visualize their distributions across the city. I have also been able to calculate for a single tree species the relative proportions of their populations by neighborhood, another good measure of species distribution, and this calculation can be easily used on any of the tree species in the city. I have also compared the diameter of three tree species to gain a sense of how these species attributes differ within and between species in regards to this variable. 
+
+There is still much to investigate though. Relationships between height and tree species, height and diameter and latitude and longitude of tree species would all be valuable to investigate to help answer this question.\
+
+The question is a bit broad. It is not asking one specific question, and so could be refined a bit. Perhaps to one species, for example: what is the distribution by neighborhood and lat/long, height class vs. diameter and the spread of height and diameter measurements for Douglas Fir trees in Metro Vancouver?
+
+
+### Research Question 2: What is the most common tree found in Vancouver? How dominant is it compared to other species?
+
+This research question was essentially answered above by counting the number of individual tree observations by tree common name (species) and then ordering these from highest (most dominant) to lowest and plotting this in a bar graph. 
+
+We could still explore tree dominance by neighborhood, or latitude and longitude, or proportionally though. 
+
+
+### Research Question 3: What is the relationship between tree diameter and it's age?
+
+There is still more to be explored with regards to this research question. We managed to gain a good sense of the spread of relative tree diameters through making a new category, trunk_thickness, and also by plotting different histograms to illustrate the distribution of the diameter data. 
+
+But we still need to explore the diameter-age relationship, and also create/modify some variables to determine tree age - this will involve filtering out the dates with NA values, calculating the approximate age based on the present year minus the date planted, and then plotting this diameter-age relationship. 
+
+I think this research question is still very fitting and the data we have obtained so far has been really interesting, especially the outliers. It would be fruitful to continue working on this question.
+
+
+### Research Question 4: Which neighborhood has the healthiest tree community? (This would need to consider tree species richness, number of trees, size distribution of trees, etc.)
+
+This question still has a long way to go to obtaining a final answer. But helpful progress was made in terms of better understanding the complexity (range, standard deviation) in tree diameters across neighborhoods, and also through visualizing some of this complexity and average diameter values through a graph of mean vs. SD where neighborhoods were identified on the plot. 
+
+I think this is a good research question and will yield some very helpful and interesting results if I work on it further. There is still lots to be done to understand which tree community is healthiest, for example through considering the height variable and the tree species richness in each neighborhood. 
 
 <!----------------------------------------------------------------------------->
 
