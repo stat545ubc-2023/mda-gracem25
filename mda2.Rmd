@@ -639,6 +639,18 @@ Take a summary table that you made from Task 1, and write it as a csv file in yo
 
 <!-------------------------- Start your work below ---------------------------->
 
+I will write the tree_count_by_species_high_to_low summary table that I created for Research Question 2 in Task 1 as a csv file into the output folder in my repository.
+
+```{r}
+
+library(here)
+
+write_csv(tree_count_by_species_high_to_low,
+          here::here("tree_count_by_species_high_to_low.csv"))
+
+```
+
+
 <!----------------------------------------------------------------------------->
 
 ## 4.2 (3 points)
