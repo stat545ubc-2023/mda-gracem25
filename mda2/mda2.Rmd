@@ -663,10 +663,10 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 
 ```{r}
 
-saveRDS(diameter_age_lm, 
+diameter_age_lm.rds <- saveRDS(diameter_age_lm, 
         here::here("diameter_age_lm.rds"))
 
-readRDS("diameter_age_lm.rds")
+readRDS(here::here("diameter_age_lm.rds"))
 
 ```
 
