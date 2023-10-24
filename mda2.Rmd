@@ -509,18 +509,19 @@ vancouver_trees_age_diameter_relationship <- vancouver_trees %>%
 
 vancouver_trees_age_diameter_relationship
 
-#To analyze age vs. diameter, I will need to filter out any individual tree observations that do not have a date_planted or diameter associated with them. I will use the dplyr function filter() to do so.
+#To analyze age vs. diameter, I will need to filter out any individual tree observations that do not have a date_planted associated with them, as it appears there are quite a few. I will use the dplyr function filter() to do so.
 
 vancouver_trees_w_dates <- vancouver_trees_age_diameter_relationship %>%
   filter(!is.na(date_planted))
 
 vancouver_trees_w_dates
 
-# Next, I only care about the year of the date_planted column, so let's rename it and adjust the date format to only include year. We will do this using the dplyr function mutate() and lubridate function as.duration() to create the new variable, age, and then use select() to drop the date_planted column from the dataset.
+# Next, I only care about the year of the date_planted column, so let's rename it and adjust the date format to only include year. We will do this using the dplyr function mutate() and R functions as.numeric() and format() to create the new variable, age, and then use select() to drop the date_planted column from the dataset.
 
 vancouver_trees_age <- vancouver_trees_w_dates %>%
-  mutate(age = as.duration(today() - date_planted)) %>%
-  select(tree_id, common_name, diameter, age)
+  mutate(year_planted = as.numeric(format(date_planted, '%Y'))) %>%
+  mutate(age = (2023-year_planted)) %>%
+  select(tree_id, common_name, diameter, year_planted, age)
 
 vancouver_trees_age
 
@@ -549,7 +550,7 @@ vancouver_trees_q2
 
 ```
 
-In summary, I used 5 functions in this task: select(), filter(), mutate(), as.duration(), and unite().
+In summary, I used 6 functions in this task: select(), filter(), mutate(), as.numeric(), format() and unite(), 4 of which are tidyverse functions (select, filter, mutate, unite).
 
 <!----------------------------------------------------------------------------->
 
@@ -561,9 +562,9 @@ Pick a research question from 1.2, and pick a variable of interest (we'll call i
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question**: FILL_THIS_IN
+**Research Question**: What is the relationship between tree diameter and it's age? (originally research question 3)
 
-**Variable of interest**: FILL_THIS_IN
+**Variable of interest**: diameter
 
 <!----------------------------------------------------------------------------->
 
@@ -579,6 +580,19 @@ Fit a model or run a hypothesis test that provides insight on this variable with
 
 <!-------------------------- Start your work below ---------------------------->
 
+### Running a model that predicts tree diameter based on tree age (which was derived from date_planted variable)
+
+```{r}
+
+library(tidymodels)
+
+# using the lm() function to fit a model of tree diameter in relation to tree age and the version of the dataset I modified to answer this question
+
+diameter_age_lm <- lm(diameter ~ age, data = vancouver_trees_age)
+
+diameter_age_lm
+
+```
 <!----------------------------------------------------------------------------->
 
 ## 3.2 (3 points)
@@ -590,6 +604,25 @@ Produce something relevant from your fitted model: either predictions on Y, or a
 -   Obtain your results using the `broom` package if possible. If your model is not compatible with the broom function you're needing, then you can obtain your results by some other means, but first indicate which broom function is not compatible.
 
 <!-------------------------- Start your work below ---------------------------->
+
+I will use the functions augment() and predict() to predict the diameter of trees in relation to age from the linear model I created above, diameter_age_lm.
+
+```{r}
+
+# obtaining predictions from the lm model of diameter in relation to age using broom function augment()
+
+predictions_diam_age_lm_augment <- augment(diameter_age_lm)
+
+predictions_diam_age_lm_augment
+
+# obtaining predictions from the lm model of diameter in relation to age using the traditional method of predict()
+
+predictions_diam_age_lm_traditional <- predict(diameter_age_lm, newdata = tibble(age = 10:20)) %>% 
+  unname()
+
+predictions_diam_age_lm_traditional
+
+```
 
 <!----------------------------------------------------------------------------->
 
