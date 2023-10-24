@@ -639,7 +639,7 @@ Take a summary table that you made from Task 1, and write it as a csv file in yo
 
 <!-------------------------- Start your work below ---------------------------->
 
-I will write the tree_count_by_species_high_to_low summary table that I created for Research Question 2 in Task 1 as a csv file into the output folder in my repository.
+I will write the tree_count_by_species_high_to_low summary table that I created for Research Question 2 in Task 1 as a csv file into my repository.
 
 ```{r}
 
@@ -660,6 +660,16 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 -   The same robustness and reproducibility criteria as in 4.1 apply here.
 
 <!-------------------------- Start your work below ---------------------------->
+
+```{r}
+
+saveRDS(diameter_age_lm, 
+        here::here("diameter_age_lm.rds"))
+
+readRDS("diameter_age_lm.rds")
+
+```
+
 
 <!----------------------------------------------------------------------------->
 
